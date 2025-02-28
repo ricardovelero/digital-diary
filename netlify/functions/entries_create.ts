@@ -19,7 +19,7 @@ const handler: Handler = async (event) => {
 
   try {
     // Connect to the entries collection
-    const contactsCollection = await connectToDB("diatyDB", "entries");
+    const contactsCollection = await connectToDB("diaryDB", "entries");
     const body = event.body ? JSON.parse(event.body) : null;
 
     // Validate request body
