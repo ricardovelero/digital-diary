@@ -6,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import { MongoClient } from "mongodb";
 import { handler as createEntry } from "../../netlify/functions/entries_create";
+import { handler as readEntries } from "../../netlify/functions/entries_read";
 
 // Mock Netlify Auth to always return an auth user.
 vi.mock("../../netlify/functions/utils/auth", () => ({
@@ -82,5 +83,28 @@ describe("Entries API", () => {
 
     expect(body.content).toBe("Test entry");
     entryId = body.id;
+  });
+
+  it("Should read entries for a user", async () => {
+    const event = {
+      httpMethod: "GET",
+      body: JSON.stringify({
+        title: "An entry",
+        content: "Test reading entry",
+      }),
+    } as any;
+
+    const response = await readEntries(event, context);
+    if (!response) {
+      throw new Error("Handler returned void instead of a response"); // Fails if handler does not return
+    }
+    console.log("Read entries full response:", response);
+
+    expect(response.statusCode).toBe(200);
+    const safeBody = typeof response.body === "string" ? response.body : "{}";
+    const notes = JSON.parse(safeBody);
+    console.log("Read entries response Body:", safeBody);
+
+    expect(notes.length).toBeGreaterThan(0);
   });
 });
