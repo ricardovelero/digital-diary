@@ -7,7 +7,7 @@ import { ObjectId } from "mongodb";
 /**
  * Updates a new entry in the database.
  * @param event The Netlify function event object.
- * @returns An object with status code and body with either a succesfull entry update or an error.
+ * @returns An object with status code and body with either a successful entry update or an error.
  */
 const handler: Handler = async (event) => {
   // Validate authorization
